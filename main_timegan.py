@@ -71,6 +71,7 @@ def main(args):
     - generated_data: generated synthetic data
     - metric_results: discriminative and predictive scores
   """
+
     ## Data loading
     if args.data_name in ['stock', 'energy']:
         ori_data = real_data_loading(args.data_name, args.seq_len)
@@ -84,14 +85,9 @@ def main(args):
         d = [1, 2]
         ma = [3, 6]
         data = getData(d=d, ma=ma)
-        x_train, y_train_1, _1, _2, _3, _4 = splitData(data, var='UNRATE', inval=36, outval=1, holdout=False, val=False, perc=.90)
-        # ori_data = np.concatenate((x_train, y_train_1.reshape([y_train_1.shape[0], 1, y_train_1.shape[1]])), axis=1)
-        # for i in [3, 6, 9, 12]:
-        #     print(i)
-        #     x_train, y_train_3, _1, _2, _3, _4 = splitData(data, inval=36, outval=i, holdout=False, val=False, perc=.90)
-        #     ori_data = np.concatenate((ori_data, y_train_3.reshape([y_train_3.shape[0], 1, y_train_3.shape[1]])), axis=1)
-        ori_data = x_train.copy()
-        print(np.array(ori_data).shape)
+        ori_data, y_train_1, _1, _2, _3, _4 = splitData(data, var='UNRATE', inval=36, outval=1, holdout=False,
+                                                        val=False,
+                                                        perc=.90)
 
     print(args.data_name + ' dataset is ready.')
 
@@ -103,6 +99,24 @@ def main(args):
     parameters['num_layer'] = args.num_layer
     parameters['iterations'] = args.iteration
     parameters['batch_size'] = args.batch_size
+
+    try:
+        os.makedir("visualizations/RUN{}_{}_{}".format(parameters['hidden_dim'],
+                                                       parameters['num_layer'],
+                                                       parameters['iterations']))
+        os.makedir("visualizations/RUN{}_{}_{}/datasets".format(parameters['hidden_dim'],
+                                                                parameters['num_layer'],
+                                                                parameters['iterations']))
+        os.makedir("visualizations/RUN{}_{}_{}/PCA".format(parameters['hidden_dim'],
+                                                           parameters['num_layer'],
+                                                           parameters['iterations']))
+        os.makedir("visualizations/RUN{}_{}_{}/tSNE".format(parameters['hidden_dim'],
+                                                            parameters['num_layer'],
+                                                            parameters['iterations']))
+    except OSError:
+        print("Creation of the directory %s failed")
+    else:
+        print("Successfully created the directory %s")
 
     generated_data, generated_data2 = timegan(ori_data, parameters)
     print('Finish Synthetic Data Generation')
@@ -135,6 +149,9 @@ def main(args):
     print(metric_results)
 
     # metric_results['fidelity'], _ = fidelity(ori_data, generated_data)
+    np.savez('visualizations/RUN{}_{}_{}/timegan_results_final.npz',
+             ori=ori_data, gen=generated_data, gen_long=generated_data2,
+             metrics=metrics)
 
     return ori_data, generated_data, generated_data2, metric_results
 
@@ -188,15 +205,4 @@ args = parser.parse_args()
 # Calls main function
 ori_data, generated_data, generated_data2, metrics = main(args)
 
-print(ori_data.shape)
-print(generated_data.shape)
-print(generated_data2.shape)
-np.savez('visualizations/RUN25_3_5000/timegan_results50_3_10000.npz',
-         ori=ori_data, gen=generated_data, gen_long=generated_data2,
-         metrics=metrics)
-
-print(metrics)
-
 complete()
-
-
