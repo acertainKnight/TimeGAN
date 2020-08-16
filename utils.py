@@ -115,6 +115,8 @@ def random_generator (batch_size, z_dim, T_mb, max_seq_len):
     - Z_mb: generated random vector
   """
   Z_mb = list()
+  # print(len(T_mb))
+  # print(batch_size)
   for i in range(batch_size):
     temp = np.zeros([max_seq_len, z_dim])
     temp_Z = np.random.uniform(0., 1, [T_mb[i], z_dim])
