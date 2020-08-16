@@ -101,18 +101,18 @@ def main(args):
     parameters['batch_size'] = args.batch_size
 
     try:
-        os.makedir("visualizations/RUN{}_{}_{}".format(parameters['hidden_dim'],
-                                                       parameters['num_layer'],
-                                                       parameters['iterations']))
-        os.makedir("visualizations/RUN{}_{}_{}/datasets".format(parameters['hidden_dim'],
-                                                                parameters['num_layer'],
-                                                                parameters['iterations']))
-        os.makedir("visualizations/RUN{}_{}_{}/PCA".format(parameters['hidden_dim'],
-                                                           parameters['num_layer'],
-                                                           parameters['iterations']))
-        os.makedir("visualizations/RUN{}_{}_{}/tSNE".format(parameters['hidden_dim'],
-                                                            parameters['num_layer'],
-                                                            parameters['iterations']))
+        os.mkdir("visualizations/RUN{}_{}_{}".format(parameters['hidden_dim'],
+                                                     parameters['num_layer'],
+                                                     parameters['iterations']))
+        os.mkdir("visualizations/RUN{}_{}_{}/datasets".format(parameters['hidden_dim'],
+                                                              parameters['num_layer'],
+                                                              parameters['iterations']))
+        os.mkdir("visualizations/RUN{}_{}_{}/PCA".format(parameters['hidden_dim'],
+                                                         parameters['num_layer'],
+                                                         parameters['iterations']))
+        os.mkdir("visualizations/RUN{}_{}_{}/tSNE".format(parameters['hidden_dim'],
+                                                          parameters['num_layer'],
+                                                          parameters['iterations']))
     except OSError:
         print("Creation of the directory %s failed")
     else:
